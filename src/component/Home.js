@@ -395,10 +395,9 @@ function Home({ isCheckIn, setIsCheckIn, user, setUser, config, setConfig }) {
                     </div>
                     <h2>Check in thành công</h2>
                     <p>
-                      Cảm ơn bạn đã check in thành công!
+                    Vui lòng quay về trang chủ để thao tác tiếp.
                       <br />
-                      Hãy bắt đầu bình chọn cho thí sinh mà bạn yêu thích ngay
-                      bây giờ
+                      Lưu ý: Cổng bình chọn chỉ mở ngay sau khi kết thúc tiết mục dự thi cuối cùng !
                     </p>
                   </Modal.Body>
                 </Modal>
