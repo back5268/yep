@@ -22,30 +22,36 @@ function Home({ isCheckIn, setIsCheckIn, user, setUser, config, setConfig }) {
   const navigate = useNavigate();
   const [showCheckin, setShowCheckin] = useState(false);
   const [infos, setInfos] = useState({});
-
+  const [time, setTime] = useState(0);
+  console.log(config.time);
   const [timeRemaining, setTimeRemaining] = useState({});
+  
+  useEffect(() => {
+    setTime(config?.time >= 0 ? config.time : 0 )
+  }, [config]);
+
+  console.log(time);
 
   useEffect(() => {
     const interval = setInterval(() => {
-      setTimeRemaining(calculateTimeRemaining());
+      const a = calculateTimeRemaining()
+      setTime(pre => pre - 1)
+      setTimeRemaining(a);
     }, 1000);
 
     return () => {
       clearInterval(interval);
     };
-  }, [config]);
+  }, []);
 
   function calculateTimeRemaining() {
-    const configEnd = new Date(config.end);
-    const currentTime = new Date();
-    const timeDifference = configEnd - currentTime;
 
-    if (timeDifference <= 0) {
+    if (time === 0) {
       return { minutes: 0, seconds: 0 };
     }
 
-    const minutes = Math.floor((timeDifference / 1000 / 60) % 60);
-    const seconds = Math.floor((timeDifference / 1000) % 60);
+    const minutes = Math.floor((time)/ 60);
+    const seconds = Math.floor((time) % 60);
 
     return { minutes, seconds };
   }
@@ -74,39 +80,35 @@ function Home({ isCheckIn, setIsCheckIn, user, setUser, config, setConfig }) {
   const [showCheckinSuccess, setShowCheckinSuccess] = useState(false);
   const handleCloseCheckinSuccess = () => setShowCheckinSuccess(false);
 
+  
   const [showTimeWarning, setShowTimeWarning] = useState(false);
   const [showTimeEndWarning, setShowTimeEndWarning] = useState(false);
   const [showCountDown, setShowCountDown] = useState(true);
   const [showStartCountDown, setStartCountDown] = useState(true);
   const handleCloseTimeEndWarning = () => setShowTimeEndWarning(false);
   const handleVote = () => {
-    const configEnd = new Date(config.end);
-    if (configEnd < today) {
-      setShowTimeEndWarning(true);
+    if (config.time === 0 ) {
+      setShowTimeWarning(true);
     } else {
       if (isCheckIn) navigate("/voteTeam");
       else setShowCheckin(true);
     }
   };
   useEffect(() => {
-    const configStart = new Date(config.start);
-    if (configStart < today) {
-      setShowTimeWarning(false);
+    if (config.time > 0) {
       setStartCountDown(false);
-    } else {
-      setShowTimeWarning(true);
-    }
+    } 
     setTimeRemaining(calculateTimeRemaining());
   }, [config]);
   const handleCloseTimeWarning = () => {
     setShowTimeWarning(false);
   };
-  useEffect(() => {
-    if (timeRemaining.minutes === 0 && timeRemaining.seconds === 0) {
-      setShowCountDown(false);
-    }
-  }, [timeRemaining]);
-
+  console.log(showStartCountDown);
+  // useEffect(() => {
+  //   if (timeRemaining.minutes === 0 && timeRemaining.seconds === 0) {
+  //     setShowCountDown(false);
+  //   }
+  // }, [timeRemaining]);
   const onStart = async () => {
     const response = await start();
     if (response.data) {
@@ -117,6 +119,7 @@ function Home({ isCheckIn, setIsCheckIn, user, setUser, config, setConfig }) {
     await reset();
     window.location.reload();
   };
+  console.log(showCountDown);
   return (
     <div style={{ display: "flex", justifyContent: "center" }}>
       <div className="home" style={{ maxWidth: "600px" }}>
