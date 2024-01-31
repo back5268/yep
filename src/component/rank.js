@@ -25,7 +25,7 @@ function Rank({ isCheckIn, setIsCheckIn, user, setUser }) {
   useEffect(() => {
     const interval = setInterval(() => {
       fetchData();
-    }, 1000);
+    }, 5000);
 
     return () => {
       clearInterval(interval);
