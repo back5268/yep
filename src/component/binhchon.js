@@ -99,69 +99,100 @@ function Binhchon({ isCheckIn, setIsCheckIn, user, setUser }) {
                   <p>
                     Bình chọn <strong>3</strong> tiết mục mà bạn yêu thích nhất
                   </p>
+                  <br />
+                  <p style={{ fontSize: "12px", fontStyle: "italic" }}>
+                    Lưu ý: Cổng bình chọn sẽ mở sau khi kêt thúc tiết mục dự thi
+                    cuối cùng
+                  </p>
                 </div>
                 <div className="list">
-                  {data && data[0] && data.map((doithi, index) => (
-                    <div
-                      className="baithi"
-                      style={{
-                        marginBottom: "20px",
-                        padding: "0 20px 0 20px",
-                        position: "relative",
-                      }}
-                      key={index}
-                    >
-                      <img
-                        className="card-img-top w-100"
-                        src={doithi.image}
-                        alt="Card image cap"
-                        style={{
-                          width: "100%",
-                          borderRadius: "20px",
-                          border: "3px solid #00BFFF",
-                        }}
-                      />
+                  {data &&
+                    data[0] &&
+                    data.map((doithi, index) => (
                       <div
-                        className="thongtin"
+                        className="baithi"
                         style={{
-                          position: "absolute",
-                          left: "40px",
-                          bottom: "10px",
-                          padding: "0px",
+                          position: "relative",
+                          marginBottom: "20px",
+                          padding: "0 20px 0 20px",
+                          position: "relative",
                         }}
+                        key={index}
                       >
-                        <span className="showname">{doithi.projectName}</span>
-                        <p
-                          className="groupname"
-                          style={{ textAlign: "left", fontWeight: "400" }}
+                        <div
+                          className="gradient-overlay"
+                          style={{
+                            position: "absolute",
+                            top: "20%",
+                            left: 20,
+                            right: 20,
+                            height: "80%",
+                            background:
+                              "linear-gradient(to bottom, transparent, blue)",
+                            opacity: "0.7",
+                            borderRadius: "20px",
+                            padding: "0 20px 0 20px",
+                            zIndex: "2",
+                          }}
+                        ></div>
+                        <img
+                          className="card-img-top w-100"
+                          src={doithi.image}
+                          alt="Card image cap"
+                          style={{
+                            width: "100%",
+                            borderRadius: "20px",
+                            border: "3px solid #00BFFF",
+                            position: "relative",
+                            zIndex: "1",
+                          }}
+                        />
+                        <div
+                          className="thongtin"
+                          style={{
+                            position: "absolute",
+                            left: "40px",
+                            bottom: "10px",
+                            padding: "0px",
+                            zIndex: "3",
+                          }}
                         >
-                          {doithi.name}
-                        </p>
-                        {favoriteClicked.includes(doithi._id) ? (
-                          <button
-                            className="button-binhchon"
-                            disabled={disabled}
-                            onClick={() => handleVote(doithi._id)}
+                          <span className="showname">{doithi.projectName}</span>
+                          <p
+                            className="groupname"
+                            style={{ textAlign: "left", fontWeight: "400" }}
                           >
-                            <span>Bình chọn</span>
-                            <MdFavorite className="favou-icon-love" />
-                          </button>
-                        ) : (
-                          <button
-                            style={{ opacity: count >= 3 ? 0.9 : 1, backgroundColor: count >= 3 ? '#72A0C1' : '#318CE7' }}
-                            disabled={count >= 3 || disabled}
-                            className="button-binhchon"
-                            onClick={() => {
-                              if (count < 3) handleVote(doithi._id);
-                            }}
-                          >
-                            <span>Bình chọn</span>
-                            <MdFavorite className="favou-icon" />
-                          </button>
-                        )}
+                            {doithi.name}
+                          </p>
+                          {favoriteClicked.includes(doithi._id) ? (
+                            <button
+                              className="button-binhchon"
+                              disabled={disabled}
+                              onClick={() => handleVote(doithi._id)}
+                            >
+                              <span>Bình chọn</span>
+                              <MdFavorite className="favou-icon-love" />
+                            </button>
+                          ) : (
+                            <button
+                              style={{
+                                opacity: count >= 3 ? 0.9 : 1,
+                                backgroundColor:
+                                  count >= 3 ? "#72A0C1" : "#318CE7",
+                              }}
+                              disabled={count >= 3 || disabled}
+                              className="button-binhchon"
+                              onClick={() => {
+                                if (count < 3) handleVote(doithi._id);
+                              }}
+                            >
+                              <span>Bình chọn</span>
+                              <MdFavorite className="favou-icon" />
+                            </button>
+                          )}
+                        </div>
                       </div>
-                    </div>
-                  ))}
+                    ))}
                   <Button
                     onClick={handleShowBinhChon}
                     className=" btn btn-danger w-100"
@@ -175,7 +206,7 @@ function Binhchon({ isCheckIn, setIsCheckIn, user, setUser }) {
                   <Button
                     onClick={() => navigate("/")}
                     className=" btn btn-default w-100"
-                    style={{ margin: "0 0 20px 0" ,backgroundColor:'#007FFF'}}
+                    style={{ margin: "0 0 20px 0", backgroundColor: "#007FFF" }}
                   >
                     Quay lại
                   </Button>

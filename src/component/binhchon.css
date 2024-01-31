@@ -1,6 +1,7 @@
 .binhchon{
     background-color: #034694;
     overflow: auto;
+    height: 100vh;
 }
 .title-binhchon{
     font-weight: bolder;

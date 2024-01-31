@@ -14,7 +14,7 @@ import check from "../image/icon/check.png";
 import checkin from "../image/icon/checkin.png";
 import rank from "../image/icon/rank.png";
 import tick from "../image/icon/tick.png";
-import { checkIn, reset, start } from "../lib/axios/index.js";
+import { checkIn, exportExcel, reset, start } from "../lib/axios/index.js";
 import { useNavigate } from "react-router-dom";
 import warn from "../image/icon/warn.png";
 
@@ -34,7 +34,6 @@ function Home({ isCheckIn, setIsCheckIn, user, setUser, config, setConfig }) {
       clearInterval(interval);
     };
   }, [config]);
-  
 
   function calculateTimeRemaining() {
     const configEnd = new Date(config.end);
@@ -56,7 +55,7 @@ function Home({ isCheckIn, setIsCheckIn, user, setUser, config, setConfig }) {
   };
   const handleSubmitCheckin = async () => {
     const response = await checkIn(infos);
-    if (response.data) {
+    if (response?.data) {
       setUser(response?.data?.user);
       setConfig(response?.data?.config);
       setIsCheckIn(true);
@@ -66,36 +65,42 @@ function Home({ isCheckIn, setIsCheckIn, user, setUser, config, setConfig }) {
   };
   const [showCheckCheckin, setShowCheckCheckin] = useState(false);
   const handleShowCheckin = () => {
-    if (isCheckIn) setShowCheckCheckin(true);
-    else setShowCheckin(true);
+      if (isCheckIn) setShowCheckCheckin(true);
+      else setShowCheckin(true);
   };
-
-  const handleVote = () => {
-    if (isCheckIn) navigate("/voteTeam");
-    else setShowCheckin(true);
-  };
+  var today = new Date();
 
   const handleCloseCheckCheckin = () => setShowCheckCheckin(false);
   const [showCheckinSuccess, setShowCheckinSuccess] = useState(false);
   const handleCloseCheckinSuccess = () => setShowCheckinSuccess(false);
 
-  var today = new Date();
   const [showTimeWarning, setShowTimeWarning] = useState(false);
+  const [showTimeEndWarning, setShowTimeEndWarning] = useState(false);
   const [showCountDown, setShowCountDown] = useState(true);
   const [showStartCountDown, setStartCountDown] = useState(true);
+  const handleCloseTimeEndWarning = () => setShowTimeEndWarning(false);
+  const handleVote = () => {
+    const configEnd = new Date(config.end);
+    if (configEnd < today) {
+      setShowTimeEndWarning(true);
+    } else {
+      if (isCheckIn) navigate("/voteTeam");
+      else setShowCheckin(true);
+    }
+  };
   useEffect(() => {
     const configStart = new Date(config.start);
     if (configStart < today) {
       setShowTimeWarning(false);
       setStartCountDown(false);
-    }else{
+    } else {
       setShowTimeWarning(true);
     }
-    setTimeRemaining(calculateTimeRemaining())
+    setTimeRemaining(calculateTimeRemaining());
   }, [config]);
   const handleCloseTimeWarning = () => {
-    setShowTimeWarning(false)
-  }
+    setShowTimeWarning(false);
+  };
   useEffect(() => {
     if (timeRemaining.minutes === 0 && timeRemaining.seconds === 0) {
       setShowCountDown(false);
@@ -105,14 +110,13 @@ function Home({ isCheckIn, setIsCheckIn, user, setUser, config, setConfig }) {
   const onStart = async () => {
     const response = await start();
     if (response.data) {
-      window.location.reload()
+      window.location.reload();
     }
   };
   const onReset = async () => {
-    const response = await reset();
-      window.location.reload()
+    await reset();
+    window.location.reload();
   };
-  console.log(timeRemaining)
   return (
     <div style={{ display: "flex", justifyContent: "center" }}>
       <div className="home" style={{ maxWidth: "600px" }}>
@@ -135,7 +139,9 @@ function Home({ isCheckIn, setIsCheckIn, user, setUser, config, setConfig }) {
                   <p className="cover">
                     Chào mừng các DXMB-ERs đến với chương trình
                     <br />
-                    <strong>YEAR END PARTY 2023 - CHÀO XUÂN 2024</strong> của{" "}<br/>
+                    <strong>
+                      YEAR END PARTY 2023 - CHÀO XUÂN 2024
+                    </strong> của <br />
                     <strong>ĐẤT XANH MIỀN BẮC!</strong>
                     <br />
                     Vui lòng lựa chọn các thao tác dưới đây !
@@ -192,7 +198,7 @@ function Home({ isCheckIn, setIsCheckIn, user, setUser, config, setConfig }) {
                         <span>Bảng xếp hạng</span>
                       </div>
                       <div className="col-2">
-                        <MdOutlineNavigateNext/>
+                        <MdOutlineNavigateNext />
                       </div>
                     </button>
                   </Link>
@@ -244,11 +250,34 @@ function Home({ isCheckIn, setIsCheckIn, user, setUser, config, setConfig }) {
                     display: "flex",
                     justifyContent: "center",
                     marginBottom: "10px",
+                    marginTop: "20px",
                   }}
                 >
                   {user?.isAdmin && (
-                    <Button onClick={() => onStart()} className="btn btn-danger" style={{ width: "30%" }}>
+                    <Button
+                      onClick={() => onStart()}
+                      className="btn btn-danger"
+                      style={{ width: "50%" }}
+                    >
                       Bắt đầu
+                    </Button>
+                  )}
+                </div>
+                <div
+                  style={{
+                    width: "100%",
+                    display: "flex",
+                    justifyContent: "center",
+                    marginBottom: "10px",
+                  }}
+                >
+                  {user?.isAdmin && (
+                    <Button
+                      onClick={() => onReset()}
+                      className="btn btn-danger"
+                      style={{ width: "50%" }}
+                    >
+                      Reset
                     </Button>
                   )}
                 </div>
@@ -260,11 +289,6 @@ function Home({ isCheckIn, setIsCheckIn, user, setUser, config, setConfig }) {
                     marginBottom: "30px",
                   }}
                 >
-                  {user?.isAdmin && (
-                    <Button onClick={() => onReset()} className="btn btn-danger" style={{ width: "30%" }}>
-                      Reset
-                    </Button>
-                  )}
                 </div>
               </div>
 
@@ -290,7 +314,9 @@ function Home({ isCheckIn, setIsCheckIn, user, setUser, config, setConfig }) {
                         className="mb-3"
                         controlId="exampleForm.ControlInput1"
                       >
-                        <Form.Label>Email</Form.Label>
+                        <Form.Label style={{ fontWeight: "700" }}>
+                          Email
+                        </Form.Label>
                         <Form.Control
                           type="email"
                           placeholder="Nhập email"
@@ -304,24 +330,34 @@ function Home({ isCheckIn, setIsCheckIn, user, setUser, config, setConfig }) {
                         className="mb-3"
                         controlId="exampleForm.ControlTextarea1"
                       >
-                        <Form.Label>Mã nhân viên</Form.Label>
+                        <Form.Label style={{ fontWeight: "700" }}>
+                          Mã nhân viên{" "}
+                        </Form.Label>
                         <Form.Control
                           type="text"
                           placeholder="Nhập mã nhân viên"
-                          value={infos.code}
-                          onChange={(e) =>
-                            setInfos({ ...infos, code: e.target.value })
-                          }
+                          value={infos.code || "MB"}
+                          onChange={(e) => {
+                            if (!infos.code || infos.code.startsWith("MB")) {
+                              setInfos({ ...infos, code: e.target.value });
+                            } else
+                              setInfos({
+                                ...infos,
+                                code: "MB" + e.target.value,
+                              });
+                          }}
                         />
                       </Form.Group>
                       <Form.Group
                         className="mb-3"
                         controlId="exampleForm.ControlTextarea1"
                       >
-                        <Form.Label>Tên nhân viên</Form.Label>
+                        <Form.Label style={{ fontWeight: "700" }}>
+                          Tên nhân viên
+                        </Form.Label>
                         <Form.Control
                           type="text"
-                          placeholder="Nhập tên"
+                          placeholder="Nhập tên nhân viên"
                           value={infos.fullName}
                           onChange={(e) =>
                             setInfos({ ...infos, fullName: e.target.value })
@@ -388,8 +424,13 @@ function Home({ isCheckIn, setIsCheckIn, user, setUser, config, setConfig }) {
                 </Modal>
               </div>
               <div className="Warning">
-                <Modal show={showTimeWarning} onHide={handleCloseTimeWarning} className="modalWarning" centered>
-                <Modal.Header closeButton></Modal.Header>
+                <Modal
+                  show={showTimeWarning}
+                  onHide={handleCloseTimeWarning}
+                  className="modalWarning"
+                  centered
+                >
+                  <Modal.Header closeButton></Modal.Header>
                   <Modal.Body>
                     <div className="modal-image">
                       <Image
@@ -406,6 +447,42 @@ function Home({ isCheckIn, setIsCheckIn, user, setUser, config, setConfig }) {
                       }}
                     >
                       Thời gian bình chọn chưa bắt đầu
+                    </h1>
+                  </Modal.Body>
+                  <Modal.Footer
+                    style={{
+                      display: "flex",
+                      flexDirection: "row",
+                      alignItems: "center",
+                      justifyContent: "center",
+                    }}
+                  ></Modal.Footer>
+                </Modal>
+              </div>
+              <div className="Warning">
+                <Modal
+                  show={showTimeEndWarning}
+                  onHide={handleCloseTimeEndWarning}
+                  className="modalWarning"
+                  centered
+                >
+                  <Modal.Header closeButton></Modal.Header>
+                  <Modal.Body>
+                    <div className="modal-image">
+                      <Image
+                        src={warn}
+                        centered
+                        style={{ borderRadius: "50%", width: "150px" }}
+                      />
+                    </div>
+                    <h1
+                      style={{
+                        fontSize: "20px",
+                        fontWeight: "700",
+                        textAlign: "center",
+                      }}
+                    >
+                      Thời gian bình chọn đã kết thúc
                     </h1>
                   </Modal.Body>
                   <Modal.Footer

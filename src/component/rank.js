@@ -13,32 +13,53 @@ function Rank({ isCheckIn, setIsCheckIn, user, setUser }) {
   const [data, setData] = useState([]);
   const navigate = useNavigate();
 
+  const fetchData = async () => {
+    const response = await getListTeam();
+    if (response?.data) {
+      const newData = response.data;
+      newData.sort((a, b) => b.count - a.count);
+      setData(newData);
+    }
+  };
+
   useEffect(() => {
-    const fetchData = async () => {
-      const response = await getListTeam();
-      if (response?.data) {
-        const newData = response.data;
-        newData.sort((a, b) => b.count - a.count);
-        setData(newData);
-      }
+    const interval = setInterval(() => {
+      fetchData();
+    }, 1000);
+
+    return () => {
+      clearInterval(interval);
     };
-    fetchData();
   }, []);
 
   return (
-    <div className="binhchon" style={{ backgroundImage: `url(${bg})`, backgroundRepeat:"no-repeat",maxWidth: '600px' }}>
+    <div
+      className="binhchon"
+      style={{
+        backgroundImage: `url(${bg})`,
+        backgroundRepeat: "no-repeat",
+        maxWidth: "600px",
+      }}
+    >
       <div className="container">
         <div className="row">
           <div className="col-12" style={{ padding: "0" }}>
             <div
               className="banner"
-              style={{ display: "flex", flexDirection: 'column', justifyContent: "center", alignItems: 'center', gap: 5, marginTop: 12}}
+              style={{
+                display: "flex",
+                flexDirection: "column",
+                justifyContent: "center",
+                alignItems: "center",
+                gap: 5,
+                marginTop: 12,
+              }}
             >
               <img className="img w-25" src={logo} alt="datxanhmienbac" />
               <img className="img w-75" src={banner} alt="datxanhmienbac" />
             </div>
 
-            <div className="body" style={{padding:'0 15px 15px 15px'}}>
+            <div className="body" style={{ padding: "0 15px 15px 15px" }}>
               <h1 className="title-binhchon">BẢNG XẾP HẠNG</h1>
               <div
                 className="col-12"
@@ -229,7 +250,9 @@ function Rank({ isCheckIn, setIsCheckIn, user, setUser }) {
                     <div
                       key={index}
                       className="card w-100"
-                      style={{ marginBottom: "30px" }}
+                      style={{
+                        marginBottom: "30px",
+                      }}
                     >
                       <div
                         className="card-body"
@@ -278,7 +301,9 @@ function Rank({ isCheckIn, setIsCheckIn, user, setUser }) {
                             </span>
                             <MdFavorite
                               style={
-                                user?.votes?.includes(d._id) && { color: "#dc3545" }
+                                user?.votes?.includes(d._id) && {
+                                  color: "#dc3545",
+                                }
                               }
                             />
                           </div>
@@ -289,7 +314,12 @@ function Rank({ isCheckIn, setIsCheckIn, user, setUser }) {
                 <Button
                   onClick={() => navigate("/")}
                   className=" btn btn-danger w-100"
-                  style={{ margin: "0 0 20px 0" }}
+                  style={{
+                    margin: "0 0 20px 0",
+                    fontSize: "22px",
+                    fontWeight: "600",
+                    padding: "10px 0 10px 0",
+                  }}
                 >
                   Quay lại
                 </Button>
