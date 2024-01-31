@@ -14,7 +14,7 @@ import check from "../image/icon/check.png";
 import checkin from "../image/icon/checkin.png";
 import rank from "../image/icon/rank.png";
 import tick from "../image/icon/tick.png";
-import { checkIn, exportExcel, reset, start } from "../lib/axios/index.js";
+import { checkIn, reset, start } from "../lib/axios/index.js";
 import { useNavigate } from "react-router-dom";
 import warn from "../image/icon/warn.png";
 
@@ -23,29 +23,25 @@ function Home({ isCheckIn, setIsCheckIn, user, setUser, config, setConfig }) {
   const [showCheckin, setShowCheckin] = useState(false);
   const [infos, setInfos] = useState({});
   const [time, setTime] = useState(0);
-  console.log(config.time);
   const [timeRemaining, setTimeRemaining] = useState({});
   
   useEffect(() => {
     setTime(config?.time >= 0 ? config.time : 0 )
   }, [config]);
 
-  console.log(time);
-
   useEffect(() => {
     const interval = setInterval(() => {
       const a = calculateTimeRemaining()
-      setTime(pre => pre - 1)
       setTimeRemaining(a);
+      if (time > 1) setTime(time - 1)
     }, 1000);
 
     return () => {
       clearInterval(interval);
     };
-  }, []);
+  }, [time]);
 
   function calculateTimeRemaining() {
-
     if (time === 0) {
       return { minutes: 0, seconds: 0 };
     }
