@@ -10,6 +10,7 @@ function App() {
   const [isCheckIn, setIsCheckIn] = useState(false);
   const [user, setUser] = useState({});
   const [config, setConfig] = useState({});
+  const [render, setRender] = useState(false);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -24,7 +25,7 @@ function App() {
     };
 
     fetchData();
-  }, []);
+  }, [render]);
 
   return (
     <div className="App">
@@ -52,6 +53,7 @@ function App() {
                   setIsCheckIn={setIsCheckIn}
                   user={user}
                   setUser={setUser}
+                  setRender={setRender}
                 />
               }
             />
@@ -63,6 +65,7 @@ function App() {
                   setIsCheckIn={setIsCheckIn}
                   user={user}
                   setUser={setUser}
+                  setRender={setRender}
                 />
               }
             />

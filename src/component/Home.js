@@ -43,7 +43,7 @@ function Home({ isCheckIn, setIsCheckIn, user, setUser, config, setConfig }) {
 
   function calculateTimeRemaining() {
     if (time === 0) {
-      return { minutes: 0, seconds: 0 };
+      return false
     }
 
     const minutes = Math.floor((time)/ 60);
@@ -216,7 +216,7 @@ function Home({ isCheckIn, setIsCheckIn, user, setUser, config, setConfig }) {
                     className="w-100"
                     style={{ marginBottom: "8px", marginTop: "auto" }}
                   >
-                    {showCountDown ? (
+                    {(showCountDown && timeRemaining) ? (
                       <div className="countdown w-75">
                         <h1 style={{ textAlign: "center", fontSize: "18px" }}>
                           Bình chọn sẽ kết thúc trong:

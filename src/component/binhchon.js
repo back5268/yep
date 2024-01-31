@@ -13,7 +13,7 @@ import tick from "../image/icon/tick.png";
 import { getInfo, getListTeam, voteTeam } from "../lib/axios/index.js";
 import { useNavigate } from "react-router-dom";
 
-function Binhchon({ isCheckIn, setIsCheckIn, user, setUser }) {
+function Binhchon({ isCheckIn, setIsCheckIn, user, setUser, setRender }) {
   const navigate = useNavigate();
   const [data, setData] = useState([]);
   const [favoriteClicked, setFavoriteClicked] = useState([]);
@@ -204,7 +204,10 @@ function Binhchon({ isCheckIn, setIsCheckIn, user, setUser }) {
                       : `Bình chọn (${count})`}
                   </Button>
                   <Button
-                    onClick={() => navigate("/")}
+                    onClick={() => {
+                      setRender(pre => !pre)
+                      navigate("/")
+                    }}
                     className=" btn btn-default w-100"
                     style={{ margin: "0 0 20px 0", backgroundColor: "#007FFF" }}
                   >
