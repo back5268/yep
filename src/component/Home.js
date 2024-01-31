@@ -30,14 +30,14 @@ function Home({ isCheckIn, setIsCheckIn, user, setUser, config, setConfig }) {
   const [showCodeWarning, setShowCodeWarning] = useState(false);
   const handleCloseCodeWarning = () => setShowCodeWarning(false);
   useEffect(() => {
-    setTime(config?.time >= 0 ? config.time : 0 )
+    setTime(config?.time >= 0 ? config.time : 0);
   }, [config]);
 
   useEffect(() => {
     const interval = setInterval(() => {
-      const a = calculateTimeRemaining()
+      const a = calculateTimeRemaining();
       setTimeRemaining(a);
-      if (time > 1) setTime(time - 1)
+      if (time > 1) setTime(time - 1);
     }, 1000);
 
     return () => {
@@ -47,11 +47,11 @@ function Home({ isCheckIn, setIsCheckIn, user, setUser, config, setConfig }) {
 
   function calculateTimeRemaining() {
     if (time === 0) {
-      return false
+      return false;
     }
 
-    const minutes = Math.floor((time)/ 60);
-    const seconds = Math.floor((time) % 60);
+    const minutes = Math.floor(time / 60);
+    const seconds = Math.floor(time % 60);
 
     return { minutes, seconds };
   }
@@ -60,30 +60,33 @@ function Home({ isCheckIn, setIsCheckIn, user, setUser, config, setConfig }) {
     setShowCheckin(false);
   };
   const handleSubmitCheckin = async () => {
-    const response = await checkIn(infos);
-    if (infos.email.includes('@dxmb.vn') && (/^\d+$/.test(infos.code.substring(2)))) {
-        if (response?.data) {
-          
-          setUser(response?.data?.user);
-          setConfig(response?.data?.config);
-          setIsCheckIn(true);
-          setShowCheckin(false);
-          setShowCheckinSuccess(true);
-        }
+    if (
+      infos.email.includes("@dxmb.vn") &&
+      /^\d+$/.test(infos.code.substring(2))
+    ) {
+      const response = await checkIn(infos);
+      if (response?.data) {
+        setUser(response?.data?.user);
+        setConfig(response?.data?.config);
+        setIsCheckIn(true);
+        setShowCheckin(false);
+        setShowCheckinSuccess(true);
       }
-      else if (!infos.email.includes('@dxmb.vn')) {
-            setShowEmailWarning(true);
-            setIsCheckIn(false);
-      } else if(!(/^\d+$/.test(infos.code.substring(2)))) {
-            setShowCodeWarning(true);
-            setIsCheckIn(false);
-      }    
+    } else if (!infos.email.includes("@dxmb.vn")) {
+      setShowEmailWarning(true);
+      setIsCheckIn(false);
+      return
+    } else if (!/^\d+$/.test(infos.code.substring(2))) {
+      setShowCodeWarning(true);
+      setIsCheckIn(false);
+      return
+    }
   };
   console.log(infos.email);
   const [showCheckCheckin, setShowCheckCheckin] = useState(false);
   const handleShowCheckin = () => {
-      if (isCheckIn) setShowCheckCheckin(true);
-      else setShowCheckin(true);
+    if (isCheckIn) setShowCheckCheckin(true);
+    else setShowCheckin(true);
   };
   var today = new Date();
 
@@ -91,16 +94,14 @@ function Home({ isCheckIn, setIsCheckIn, user, setUser, config, setConfig }) {
   const [showCheckinSuccess, setShowCheckinSuccess] = useState(false);
   const handleCloseCheckinSuccess = () => setShowCheckinSuccess(false);
 
-  
   const [showTimeWarning, setShowTimeWarning] = useState(false);
   const [showTimeEndWarning, setShowTimeEndWarning] = useState(false);
   const [showCountDown, setShowCountDown] = useState(true);
   const [showStartCountDown, setStartCountDown] = useState(true);
   const handleCloseTimeEndWarning = () => setShowTimeEndWarning(false);
 
-
   const handleVote = () => {
-    if (config.time === 0 ) {
+    if (config.time === 0) {
       setShowTimeWarning(true);
     } else {
       if (isCheckIn) navigate("/voteTeam");
@@ -110,7 +111,7 @@ function Home({ isCheckIn, setIsCheckIn, user, setUser, config, setConfig }) {
   useEffect(() => {
     if (config.time > 0) {
       setStartCountDown(false);
-    } 
+    }
     setTimeRemaining(calculateTimeRemaining());
   }, [config]);
   const handleCloseTimeWarning = () => {
@@ -233,7 +234,7 @@ function Home({ isCheckIn, setIsCheckIn, user, setUser, config, setConfig }) {
                     className="w-100"
                     style={{ marginBottom: "8px", marginTop: "auto" }}
                   >
-                    {(showCountDown && timeRemaining) ? (
+                    {showCountDown && timeRemaining ? (
                       <div className="countdown w-75">
                         <h1 style={{ textAlign: "center", fontSize: "18px" }}>
                           Bình chọn sẽ kết thúc trong:
@@ -304,8 +305,7 @@ function Home({ isCheckIn, setIsCheckIn, user, setUser, config, setConfig }) {
                     justifyContent: "center",
                     marginBottom: "30px",
                   }}
-                >
-                </div>
+                ></div>
               </div>
 
               <div className="Checkin">
@@ -411,9 +411,10 @@ function Home({ isCheckIn, setIsCheckIn, user, setUser, config, setConfig }) {
                     </div>
                     <h2>Check in thành công</h2>
                     <p>
-                    Vui lòng quay về trang chủ để thao tác tiếp.
+                      Vui lòng quay về trang chủ để thao tác tiếp.
                       <br />
-                      Lưu ý: Cổng bình chọn chỉ mở ngay sau khi kết thúc tiết mục dự thi cuối cùng !
+                      Lưu ý: Cổng bình chọn chỉ mở ngay sau khi kết thúc tiết
+                      mục dự thi cuối cùng !
                     </p>
                   </Modal.Body>
                 </Modal>
@@ -533,7 +534,9 @@ function Home({ isCheckIn, setIsCheckIn, user, setUser, config, setConfig }) {
                         textAlign: "center",
                       }}
                     >
-                      Email cần chứa đuôi "@dxmb.vn"<br/>(Ví dụ :tranthuha@dxmb.vn)
+                      Email cần chứa đuôi "@dxmb.vn"
+                      <br />
+                      (Ví dụ :tranthuha@dxmb.vn)
                     </h1>
                   </Modal.Body>
                   <Modal.Footer
