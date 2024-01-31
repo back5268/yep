@@ -28,7 +28,7 @@ function Home({ isCheckIn, setIsCheckIn, user, setUser, config, setConfig }) {
   useEffect(() => {
     const interval = setInterval(() => {
       setTimeRemaining(calculateTimeRemaining());
-    }, 1000);
+    }, 5000);
 
     return () => {
       clearInterval(interval);
