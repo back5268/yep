@@ -1,0 +1,68 @@
+.binhchon{
+    background-color: #034694;
+    overflow: auto;
+}
+.title-binhchon{
+    font-weight: bolder;
+    color: white;
+    margin: 0 auto;
+    padding: 10px;
+}
+.binhchon.thele{
+    margin-top: 10px;
+    display: flex;
+    align-items: center;
+}
+.thele>span{
+    display: inline;
+    color: white;
+    font-style: italic;
+    border: 1px solid white;
+    border-radius: 5px; 
+    padding: 3px;
+    font-weight: 700
+}
+.thele>p{
+    margin-top: 5px;
+    display: inline;
+    margin-left:10px ;
+    color: white;
+    font-size: 14px;
+}
+.list{
+    padding-top: 30px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+.list.baithi{
+    border: 3px solid #6CB4EE;
+    border-radius: 15px;
+}
+.showname{
+    color: white;
+    font-weight: 500;
+}
+.groupname{
+    font-weight: 400;
+    color: white;
+    font-size: 14px;
+}
+.button-binhchon{
+    border-radius: 30px;
+    font-size: 14px;
+    padding: 5px 10px 5px 10px;
+    background-color: #318CE7;
+    color: white;
+    font-weight: 600;
+}
+.favou-icon{
+    margin-left: 10px;
+    font-size: 20px;
+}
+.favou-icon-love{
+    margin-left: 10px;
+    font-size: 20px;
+    color: red;
+}
