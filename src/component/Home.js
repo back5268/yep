@@ -24,7 +24,11 @@ function Home({ isCheckIn, setIsCheckIn, user, setUser, config, setConfig }) {
   const [infos, setInfos] = useState({});
   const [time, setTime] = useState(0);
   const [timeRemaining, setTimeRemaining] = useState({});
-  
+
+  const [showEmailWarning, setShowEmailWarning] = useState(false);
+  const handleCloseEmailWarning = () => setShowEmailWarning(false);
+  const [showCodeWarning, setShowCodeWarning] = useState(false);
+  const handleCloseCodeWarning = () => setShowCodeWarning(false);
   useEffect(() => {
     setTime(config?.time >= 0 ? config.time : 0 )
   }, [config]);
@@ -57,14 +61,25 @@ function Home({ isCheckIn, setIsCheckIn, user, setUser, config, setConfig }) {
   };
   const handleSubmitCheckin = async () => {
     const response = await checkIn(infos);
-    if (response?.data) {
-      setUser(response?.data?.user);
-      setConfig(response?.data?.config);
-      setIsCheckIn(true);
-      setShowCheckin(false);
-      setShowCheckinSuccess(true);
-    }
+    if (infos.email.includes('@dxmb.vn') && (/^\d+$/.test(infos.code.substring(2)))) {
+        if (response?.data) {
+          
+          setUser(response?.data?.user);
+          setConfig(response?.data?.config);
+          setIsCheckIn(true);
+          setShowCheckin(false);
+          setShowCheckinSuccess(true);
+        }
+      }
+      else if (!infos.email.includes('@dxmb.vn')) {
+            setShowEmailWarning(true);
+            setIsCheckIn(false);
+      } else if(!(/^\d+$/.test(infos.code.substring(2)))) {
+            setShowCodeWarning(true);
+            setIsCheckIn(false);
+      }    
   };
+  console.log(infos.email);
   const [showCheckCheckin, setShowCheckCheckin] = useState(false);
   const handleShowCheckin = () => {
       if (isCheckIn) setShowCheckCheckin(true);
@@ -82,6 +97,8 @@ function Home({ isCheckIn, setIsCheckIn, user, setUser, config, setConfig }) {
   const [showCountDown, setShowCountDown] = useState(true);
   const [showStartCountDown, setStartCountDown] = useState(true);
   const handleCloseTimeEndWarning = () => setShowTimeEndWarning(false);
+
+
   const handleVote = () => {
     if (config.time === 0 ) {
       setShowTimeWarning(true);
@@ -481,6 +498,78 @@ function Home({ isCheckIn, setIsCheckIn, user, setUser, config, setConfig }) {
                       }}
                     >
                       Thời gian bình chọn đã kết thúc
+                    </h1>
+                  </Modal.Body>
+                  <Modal.Footer
+                    style={{
+                      display: "flex",
+                      flexDirection: "row",
+                      alignItems: "center",
+                      justifyContent: "center",
+                    }}
+                  ></Modal.Footer>
+                </Modal>
+              </div>
+              <div className="Warning">
+                <Modal
+                  show={showEmailWarning}
+                  onHide={handleCloseEmailWarning}
+                  className="modalWarning"
+                  centered
+                >
+                  <Modal.Header closeButton></Modal.Header>
+                  <Modal.Body>
+                    <div className="modal-image">
+                      <Image
+                        src={warn}
+                        centered
+                        style={{ borderRadius: "50%", width: "150px" }}
+                      />
+                    </div>
+                    <h1
+                      style={{
+                        fontSize: "20px",
+                        fontWeight: "700",
+                        textAlign: "center",
+                      }}
+                    >
+                      Email cần chứa đuôi "@dxmb.vn"<br/>(Ví dụ :tranthuha@dxmb.vn)
+                    </h1>
+                  </Modal.Body>
+                  <Modal.Footer
+                    style={{
+                      display: "flex",
+                      flexDirection: "row",
+                      alignItems: "center",
+                      justifyContent: "center",
+                    }}
+                  ></Modal.Footer>
+                </Modal>
+              </div>
+              <div className="Warning">
+                <Modal
+                  show={showCodeWarning}
+                  onHide={handleCloseCodeWarning}
+                  className="modalWarning"
+                  centered
+                >
+                  <Modal.Header closeButton></Modal.Header>
+                  <Modal.Body>
+                    <div className="modal-image">
+                      <Image
+                        src={warn}
+                        centered
+                        style={{ borderRadius: "50%", width: "150px" }}
+                      />
+                    </div>
+                    <h1
+                      style={{
+                        fontSize: "20px",
+                        fontWeight: "700",
+                        textAlign: "center",
+                      }}
+                    >
+                      Mã nhân viên: Bạn chỉ được nhập kí tự số (từ 0 đến 9)
                     </h1>
                   </Modal.Body>
                   <Modal.Footer
